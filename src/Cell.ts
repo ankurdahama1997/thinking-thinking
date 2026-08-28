@@ -15,4 +15,8 @@ export class Cell {
         this.cytosol = new Compartment("cytosol", cytosolVolumeCubicMicrometers);
         this.plasmaMembrane = new Membrane(membraneAreaSquareMicrometers);
     }
+
+    public step(dtSeconds: number): void {
+        // Nothing changes yet. This is where membrane asks proteins about what happened during the last dtSeconds.
+    }
 }

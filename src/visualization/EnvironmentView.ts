@@ -9,10 +9,12 @@ export class EnvironmentView {
   private readonly renderer = new THREE.WebGLRenderer({ antialias: true });
   private readonly controls: OrbitControls;
   private readonly cellViews: CellView[];
+  private readonly clock = new THREE.Clock();
 
   constructor(
     private readonly container: HTMLElement,
     private readonly environment: Environment,
+    private readonly onBeforeRender?: (realElapsedSeconds: number) => void,
   ) {
     this.scene.background = new THREE.Color(0x050811);
 
@@ -174,6 +176,7 @@ export class EnvironmentView {
   }
 
   private render(): void {
+    this.onBeforeRender?.(this.clock.getDelta());
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }

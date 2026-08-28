@@ -1,5 +1,6 @@
 import { Cell } from './Cell';
 import { Environment } from './Environment';
+import { SimulationRunner } from './SimulationRunner';
 import { EnvironmentView } from './visualization/EnvironmentView';
 import './styles.css';
 
@@ -8,7 +9,7 @@ function createEnvironment(cellCount: number): Environment {
     throw new Error('Cell count must be a non-negative integer.');
   }
 
-  const environment = new Environment(10_000);
+  const environment = new Environment(10_000, 1e-5); // dt = 10 microseconds
 
   for (let index = 0; index < cellCount; index += 1) {
     environment.addCell(new Cell(`cell-${index + 1}`, 500, 300));
@@ -18,6 +19,8 @@ function createEnvironment(cellCount: number): Environment {
 }
 
 const environment = createEnvironment(30);
+const runner = new SimulationRunner(environment);
+runner.timeScale = 0.001; // 1 simulated millisecond per real second (1000x slow motion)
 const app = document.querySelector<HTMLDivElement>('#app');
 
 if (!app) {
@@ -42,4 +45,4 @@ if (!sceneContainer) {
   throw new Error('Could not find the scene element.');
 }
 
-new EnvironmentView(sceneContainer, environment);
+new EnvironmentView(sceneContainer, environment, (elapsed) => runner.advance(elapsed));
